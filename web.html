@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SolusiPro Consulting - Solusi Bisnis Profesional</title>
+  <!-- Font Awesome CDN untuk ikon -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    /* === RESET & UMUM === */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      scroll-behavior: smooth;
+    }
+    .container {
+      width: 90%;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    /* === HEADER === */
+    header {
+      background: #1a2f5f;
+      color: white;
+      padding: 15px 0;
+      position: fixed;
+      width: 100%;
+      top: 0;
+      z-index: 1000;
+    }
+    header .container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .logo {
+      font-size: 1.8rem;
+      font-weight: bold;
+    }
+    .logo span {
+      color: #FFA500;
+    }
+    nav ul {
+      display: flex;
+      list-style: none;
+    }
+    nav ul li {
+      margin-left: 25px;
+    }
+    nav ul li a {
+      color: white;
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.3s;
+    }
+    nav ul li a:hover {
+      color: #FFA500;
+    }
+    .hamburger {
+      display: none;
+      font-size: 1.8rem;
+      cursor: pointer;
+      color: white;
+    }
+
+    /* === HERO SECTION === */
+    .hero {
+      background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), 
+                  url('https://images.unsplash.com/photo-1497366754035-f200968a6e72?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80') 
+                  no-repeat center center/cover;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      text-align: center;
+      color: white;
+      padding-top: 80px;
+    }
+    .hero h1 {
+      font-size: 2.8rem;
+      margin-bottom: 20px;
+    }
+    .hero p {
+      font-size: 1.2rem;
+      max-width: 700px;
+      margin: 0 auto 30px;
+    }
+    .btn {
+      display: inline-block;
+      background: #FFA500;
+      color: #1a2f5f;
+      padding: 12px 30px;
+      text-decoration: none;
+      border-radius: 30px;
+      font-weight: bold;
+      transition: background 0.3s;
+    }
+    .btn:hover {
+      background: #e69500;
+    }
+
+    /* === SECTIONS === */
+    section {
+      padding: 80px 0;
+    }
+    section h2 {
+      text-align: center;
+      margin-bottom: 40px;
+      font-size: 2.2rem;
+      color: #1a2f5f;
+    }
+
+    /* About */
+    .about {
+      background: #f9f9f9;
+    }
+
+    /* Services */
+    .services .service-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 30px;
+    }
+    .service-card {
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      text-align: center;
+      transition: transform 0.3s;
+    }
+    .service-card:hover {
+      transform: translateY(-10px);
+    }
+    .service-card i {
+      font-size: 2.5rem;
+      color: #1a2f5f;
+      margin-bottom: 20px;
+    }
+    .service-card h3 {
+      margin-bottom: 15px;
+      color: #1a2f5f;
+    }
+
+    /* Testimonials */
+    .testimonials {
+      background: #1a2f5f;
+      color: white;
+      text-align: center;
+    }
+    .testimonial p {
+      font-style: italic;
+      max-width: 800px;
+      margin: 0 auto 20px;
+      font-size: 1.1rem;
+    }
+
+    /* Contact */
+    .contact form {
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    .contact input,
+    .contact textarea {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    .contact button {
+      width: 100%;
+      background: #1a2f5f;
+      color: white;
+      border: none;
+      padding: 12px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    .contact button:hover {
+      background: #0d1b3a;
+    }
+
+    /* Footer */
+    footer {
+      background: #0d1b3a;
+      color: white;
+      padding: 40px 0 20px;
+    }
+    .footer-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    .footer-logo {
+      font-size: 1.6rem;
+      font-weight: bold;
+    }
+    .footer-logo span {
+      color: #FFA500;
+    }
+    .social a {
+      color: white;
+      margin-left: 15px;
+      font-size: 1.3rem;
+      text-decoration: none;
+    }
+    .copyright {
+      text-align: center;
+      font-size: 0.9rem;
+      color: #aaa;
+    }
+
+    /* === RESPONSIVE === */
+    @media (max-width: 768px) {
+      .hamburger {
+        display: block;
+      }
+      nav ul {
+        display: none;
+        position: absolute;
+        top: 70px;
+        left: 0;
+        width: 100%;
+        background: #1a2f5f;
+        flex-direction: column;
+        padding: 20px;
+      }
+      nav ul.show {
+        display: flex;
+      }
+      nav ul li {
+        margin: 10px 0;
+      }
+      .hero h1 {
+        font-size: 2rem;
+      }
+      .footer-content {
+        flex-direction: column;
+        text-align: center;
+      }
+      .social {
+        margin-top: 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="container">
+      <div class="logo">Solusi<span>Pro</span></div>
+      <nav>
+        <ul id="navMenu">
+          <li><a href="#home">Beranda</a></li>
+          <li><a href="#layanan">Layanan</a></li>
+          <li><a href="#tentang">Tentang</a></li>
+          <li><a href="#kontak">Kontak</a></li>
+        </ul>
+      </nav>
+      <div class="hamburger" id="hamburger">&#9776;</div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section id="home" class="hero">
+    <div class="container">
+      <h1>Solusi Profesional untuk Bisnis Anda</h1>
+      <p>Kami membantu perusahaan berkembang melalui strategi bisnis & digital marketing yang terukur.</p>
+      <a href="#kontak" class="btn">Hubungi Kami</a>
+    </div>
+  </section>
+
+  <!-- Tentang -->
+  <section id="tentang" class="about">
+    <div class="container">
+      <h2>Tentang Kami</h2>
+      <p>
+        Didirikan sejak 2018, <strong>SolusiPro Consulting</strong> telah membantu lebih dari 200 klien di berbagai industri 
+        untuk meningkatkan performa bisnis mereka. Kami percaya bahwa setiap bisnis unik, 
+        dan solusi kami selalu disesuaikan dengan kebutuhan Anda.
+      </p>
+    </div>
+  </section>
+
+  <!-- Layanan -->
+  <section id="layanan" class="services">
+    <div class="container">
+      <h2>Layanan Kami</h2>
+      <div class="service-grid">
+        <div class="service-card">
+          <i class="fas fa-chart-line"></i>
+          <h3>Strategi Bisnis</h3>
+          <p>Analisis kompetitor, perencanaan pertumbuhan, dan roadmap eksekusi.</p>
+        </div>
+        <div class="service-card">
+          <i class="fas fa-bullhorn"></i>
+          <h3>Branding</h3>
+          <p>Membangun identitas merek yang kuat dan konsisten di semua platform.</p>
+        </div>
+        <div class="service-card">
+          <i class="fas fa-hashtag"></i>
+          <h3>Media Sosial</h3>
+          <p>Konten kreatif, manajemen akun, dan kampanye berbayar yang efektif.</p>
+        </div>
+        <div class="service-card">
+          <i class="fas fa-chalkboard-teacher"></i>
+          <h3>Pelatihan Tim</h3>
+          <p>Workshop & pelatihan untuk meningkatkan kapasitas tim Anda.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimoni -->
+  <section class="testimonials">
+    <div class="container">
+      <h2>Apa Kata Klien Kami</h2>
+      <div class="testimonial">
+        <p>“Kemitraan dengan SolusiPro mengubah cara kami memasarkan produk. ROI naik 200% dalam 6 bulan!”</p>
+        <p><strong>— Rina Wijaya</strong>, CEO PT Maju Bersama</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Kontak -->
+  <section id="kontak" class="contact">
+    <div class="container">
+      <h2>Hubungi Kami</h2>
+      <form id="contactForm">
+        <input type="text" id="name" placeholder="Nama Lengkap" required />
+        <input type="email" id="email" placeholder="Email" required />
+        <textarea id="message" placeholder="Pesan Anda" rows="5" required></textarea>
+        <button type="submit" class="btn">Kirim Pesan</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-logo">Solusi<span>Pro</span></div>
+        <p>Jl. Bisnis Raya No. 123, Jakarta Selatan<br>
+        ?? (021) 1234-5678 | ?? info@solusipro.id</p>
+        <div class="social">
+          <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+          <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+          <a href="https://wa.me/6281234567890" target="_blank" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+        </div>
+      </div>
+      <p class="copyright">&copy; 2026 SolusiPro Consulting. Semua hak dilindungi.</p>
+    </div>
+  </footer>
+
+  <!-- JavaScript -->
+  <script>
+    // Toggle menu mobile
+    const hamburger = document.getElementById('hamburger');
+    const navMenu = document.getElementById('navMenu');
+
+    hamburger.addEventListener('click', () => {
+      navMenu.classList.toggle('show');
+    });
+
+    // Smooth scroll + tutup menu saat klik link
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function(e) {
+        e.preventDefault();
+        const targetId = this.getAttribute('href');
+        const targetElement = document.querySelector(targetId);
+        if (targetElement) {
+          window.scrollTo({
+            top: targetElement.offsetTop - 80,
+            behavior: 'smooth'
+          });
+          // Tutup menu mobile
+          navMenu.classList.remove('show');
+        }
+      });
+    });
+
+    // Form submit handler
+    document.getElementById('contactForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      alert('? Terima kasih! Pesan Anda telah dikirim.\nKami akan segera menghubungi Anda.');
+      this.reset();
+    });
+  </script>
+</body>
+</html>
