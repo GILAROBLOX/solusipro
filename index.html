@@ -3,253 +3,263 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>SolusiPro Consulting - Solusi Bisnis Profesional</title>
-  <!-- Font Awesome CDN untuk ikon -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <title>AgroSawit - Perusahaan Penanaman Kelapa Sawit</title>
+  <meta name="description" content="Perusahaan berkelanjutan yang fokus pada penanaman kelapa sawit berkualitas tinggi di Indonesia.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
   <style>
-    /* === RESET & UMUM === */
+    /* === Reset & Base === */
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
     }
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      line-height: 1.6;
-      color: #333;
+
+    html {
       scroll-behavior: smooth;
     }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #ffffff;
+      color: #2d3748;
+      line-height: 1.6;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
     .container {
       width: 90%;
       max-width: 1200px;
       margin: 0 auto;
-      padding: 20px;
     }
 
-    /* === HEADER === */
+    /* === Header & Navigation === */
     header {
-      background: #1a2f5f;
-      color: white;
-      padding: 15px 0;
+      padding: 1.5rem 0;
       position: fixed;
       width: 100%;
       top: 0;
       z-index: 1000;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(4px);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
     }
-    header .container {
+
+    .navbar {
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
+
     .logo {
-      font-size: 1.8rem;
-      font-weight: bold;
-    }
-    .logo span {
-      color: #FFA500;
-    }
-    nav ul {
-      display: flex;
-      list-style: none;
-    }
-    nav ul li {
-      margin-left: 25px;
-    }
-    nav ul li a {
-      color: white;
-      text-decoration: none;
-      font-weight: 500;
-      transition: color 0.3s;
-    }
-    nav ul li a:hover {
-      color: #FFA500;
-    }
-    .hamburger {
-      display: none;
-      font-size: 1.8rem;
-      cursor: pointer;
-      color: white;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #2f855a;
     }
 
-    /* === HERO SECTION === */
-    .hero {
-      background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), 
-                  url('https://images.unsplash.com/photo-1497366754035-f200968a6e72?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80') 
-                  no-repeat center center/cover;
-      height: 100vh;
+    .nav-links {
       display: flex;
-      align-items: center;
-      text-align: center;
-      color: white;
-      padding-top: 80px;
+      gap: 2rem;
+      list-style: none;
     }
+
+    .nav-links a {
+      font-weight: 600;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      transition: all 0.2s ease;
+      position: relative;
+    }
+
+    /* Efek glow & scale saat aktif */
+    .nav-links a.active-glow {
+      transform: scale(1.1);
+      box-shadow: 0 0 16px rgba(47, 133, 90, 0.6);
+      background-color: rgba(47, 133, 90, 0.08);
+      z-index: 2;
+    }
+
+    .menu-toggle {
+      display: none;
+      flex-direction: column;
+      cursor: pointer;
+    }
+
+    .menu-toggle span {
+      width: 25px;
+      height: 3px;
+      background: #2d3748;
+      margin: 3px 0;
+      transition: 0.3s;
+    }
+
+    /* === Hero Section === */
+    .hero {
+      padding: 12rem 0 6rem;
+      background: linear-gradient(rgba(255,255,255,0.9), rgba(255,255,255,0.9)), url('https://images.unsplash.com/photo-1602143407151-7111542de6e8?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') no-repeat center center/cover;
+      text-align: center;
+    }
+
     .hero h1 {
       font-size: 2.8rem;
-      margin-bottom: 20px;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      color: #1a202c;
     }
+
     .hero p {
       font-size: 1.2rem;
       max-width: 700px;
-      margin: 0 auto 30px;
+      margin: 0 auto 2rem;
+      color: #4a5568;
     }
+
     .btn {
       display: inline-block;
-      background: #FFA500;
-      color: #1a2f5f;
-      padding: 12px 30px;
-      text-decoration: none;
-      border-radius: 30px;
-      font-weight: bold;
+      padding: 0.8rem 2rem;
+      background-color: #2f855a;
+      color: white;
+      border-radius: 4px;
+      font-weight: 600;
       transition: background 0.3s;
     }
+
     .btn:hover {
-      background: #e69500;
+      background-color: #276749;
     }
 
-    /* === SECTIONS === */
-    section {
-      padding: 80px 0;
+    /* === About Section === */
+    .section {
+      padding: 5rem 0;
     }
-    section h2 {
+
+    .section-title {
       text-align: center;
-      margin-bottom: 40px;
       font-size: 2.2rem;
-      color: #1a2f5f;
+      margin-bottom: 3rem;
+      color: #1a202c;
     }
 
-    /* About */
-    .about {
-      background: #f9f9f9;
-    }
-
-    /* Services */
-    .services .service-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 30px;
-    }
-    .service-card {
-      background: white;
-      padding: 30px;
-      border-radius: 10px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-      text-align: center;
-      transition: transform 0.3s;
-    }
-    .service-card:hover {
-      transform: translateY(-10px);
-    }
-    .service-card i {
-      font-size: 2.5rem;
-      color: #1a2f5f;
-      margin-bottom: 20px;
-    }
-    .service-card h3 {
-      margin-bottom: 15px;
-      color: #1a2f5f;
-    }
-
-    /* Testimonials */
-    .testimonials {
-      background: #1a2f5f;
-      color: white;
-      text-align: center;
-    }
-    .testimonial p {
-      font-style: italic;
-      max-width: 800px;
-      margin: 0 auto 20px;
-      font-size: 1.1rem;
-    }
-
-    /* Contact */
-    .contact form {
-      max-width: 600px;
-      margin: 0 auto;
-    }
-    .contact input,
-    .contact textarea {
-      width: 100%;
-      padding: 12px;
-      margin-bottom: 15px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-    }
-    .contact button {
-      width: 100%;
-      background: #1a2f5f;
-      color: white;
-      border: none;
-      padding: 12px;
-      border-radius: 5px;
-      cursor: pointer;
-      font-weight: bold;
-    }
-    .contact button:hover {
-      background: #0d1b3a;
-    }
-
-    /* Footer */
-    footer {
-      background: #0d1b3a;
-      color: white;
-      padding: 40px 0 20px;
-    }
-    .footer-content {
+    .about-content {
       display: flex;
-      justify-content: space-between;
+      gap: 3rem;
       align-items: center;
-      margin-bottom: 20px;
-    }
-    .footer-logo {
-      font-size: 1.6rem;
-      font-weight: bold;
-    }
-    .footer-logo span {
-      color: #FFA500;
-    }
-    .social a {
-      color: white;
-      margin-left: 15px;
-      font-size: 1.3rem;
-      text-decoration: none;
-    }
-    .copyright {
-      text-align: center;
-      font-size: 0.9rem;
-      color: #aaa;
     }
 
-    /* === RESPONSIVE === */
+    .about-text h3 {
+      font-size: 1.8rem;
+      margin-bottom: 1.5rem;
+      color: #2f855a;
+    }
+
+    .about-text p {
+      margin-bottom: 1.5rem;
+      color: #4a5568;
+    }
+
+    .about-image {
+      flex: 1;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    .about-image img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    /* === Contact Section === */
+    #contact {
+      background-color: #f8fafc;
+      padding: 5rem 0;
+    }
+
+    .contact-content {
+      max-width: 700px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .contact-content h3 {
+      font-size: 1.8rem;
+      margin-bottom: 1.5rem;
+      color: #2f855a;
+    }
+
+    .contact-info {
+      margin-bottom: 2rem;
+      color: #4a5568;
+    }
+
+    .contact-form input,
+    .contact-form textarea {
+      width: 100%;
+      padding: 0.8rem;
+      margin-bottom: 1rem;
+      border: 1px solid #cbd5e0;
+      border-radius: 4px;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .contact-form textarea {
+      height: 120px;
+      resize: vertical;
+    }
+
+    /* === Footer === */
+    footer {
+      background-color: #edf2f7;
+      padding: 2rem 0;
+      text-align: center;
+      color: #718096;
+      font-size: 0.95rem;
+    }
+
+    /* === Responsive === */
     @media (max-width: 768px) {
-      .hamburger {
-        display: block;
-      }
-      nav ul {
-        display: none;
-        position: absolute;
-        top: 70px;
-        left: 0;
-        width: 100%;
-        background: #1a2f5f;
-        flex-direction: column;
-        padding: 20px;
-      }
-      nav ul.show {
+      .menu-toggle {
         display: flex;
       }
-      nav ul li {
-        margin: 10px 0;
-      }
-      .hero h1 {
-        font-size: 2rem;
-      }
-      .footer-content {
+
+      .nav-links {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        background: white;
         flex-direction: column;
+        padding: 1.5rem 0;
+        gap: 1.2rem;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        display: none;
+      }
+
+      .nav-links.active {
+        display: flex;
+      }
+
+      .nav-links a {
+        padding: 0.75rem 2rem;
         text-align: center;
       }
-      .social {
-        margin-top: 15px;
+
+      .hero h1 {
+        font-size: 2.2rem;
+      }
+
+      .hero p {
+        font-size: 1rem;
+      }
+
+      .about-content {
+        flex-direction: column;
       }
     }
   </style>
@@ -258,143 +268,111 @@
 
   <!-- Header -->
   <header>
-    <div class="container">
-      <div class="logo">Solusi<span>Pro</span></div>
+    <div class="container navbar">
+      <a href="#" class="logo">AgroSawit</a>
       <nav>
-        <ul id="navMenu">
-          <li><a href="#home">Beranda</a></li>
-          <li><a href="#layanan">Layanan</a></li>
-          <li><a href="#tentang">Tentang</a></li>
-          <li><a href="#kontak">Kontak</a></li>
+        <ul class="nav-links" id="navLinks">
+          <li><a href="#home" data-nav>Beranda</a></li>
+          <li><a href="#about" data-nav>Tentang Kami</a></li>
+          <li><a href="#contact" data-nav>Kontak</a></li>
         </ul>
+        <div class="menu-toggle" id="menuToggle">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
       </nav>
-      <div class="hamburger" id="hamburger">&#9776;</div>
     </div>
   </header>
 
   <!-- Hero Section -->
-  <section id="home" class="hero">
+  <section class="hero" id="home">
     <div class="container">
-      <h1>Solusi Profesional untuk Bisnis Anda</h1>
-      <p>Kami membantu perusahaan berkembang melalui strategi bisnis & digital marketing yang terukur.</p>
-      <a href="#kontak" class="btn">Hubungi Kami</a>
+      <h1>Menanam Masa Depan dengan Kelapa Sawit</h1>
+      <p>Perusahaan berkelanjutan yang berkomitmen pada penanaman kelapa sawit berkualitas tinggi, ramah lingkungan, dan berkontribusi bagi pertumbuhan ekonomi lokal.</p>
+      <a href="#about" class="btn">Pelajari Lebih Lanjut</a>
     </div>
   </section>
 
-  <!-- Tentang -->
-  <section id="tentang" class="about">
+  <!-- About Section -->
+  <section class="section" id="about">
     <div class="container">
-      <h2>Tentang Kami</h2>
-      <p>
-        Didirikan sejak 2018, <strong>SolusiPro Consulting</strong> telah membantu lebih dari 200 klien di berbagai industri 
-        untuk meningkatkan performa bisnis mereka. Kami percaya bahwa setiap bisnis unik, 
-        dan solusi kami selalu disesuaikan dengan kebutuhan Anda.
-      </p>
-    </div>
-  </section>
-
-  <!-- Layanan -->
-  <section id="layanan" class="services">
-    <div class="container">
-      <h2>Layanan Kami</h2>
-      <div class="service-grid">
-        <div class="service-card">
-          <i class="fas fa-chart-line"></i>
-          <h3>Strategi Bisnis</h3>
-          <p>Analisis kompetitor, perencanaan pertumbuhan, dan roadmap eksekusi.</p>
+      <h2 class="section-title">Tentang Kami</h2>
+      <div class="about-content">
+        <div class="about-text">
+          <h3>Penanaman Sawit Berkelanjutan</h3>
+          <p>Sejak 2005, AgroSawit telah menjadi pelopor dalam praktik penanaman kelapa sawit yang berkelanjutan di Indonesia. Kami menggabungkan teknologi modern dengan kearifan lokal untuk memastikan hasil panen yang optimal tanpa merusak ekosistem.</p>
+          <p>Komitmen kami mencakup pengelolaan lahan yang bertanggung jawab, konservasi keanekaragaman hayati, serta pemberdayaan masyarakat sekitar perkebunan.</p>
+          <a href="#contact" class="btn">Hubungi Kami</a>
         </div>
-        <div class="service-card">
-          <i class="fas fa-bullhorn"></i>
-          <h3>Branding</h3>
-          <p>Membangun identitas merek yang kuat dan konsisten di semua platform.</p>
-        </div>
-        <div class="service-card">
-          <i class="fas fa-hashtag"></i>
-          <h3>Media Sosial</h3>
-          <p>Konten kreatif, manajemen akun, dan kampanye berbayar yang efektif.</p>
-        </div>
-        <div class="service-card">
-          <i class="fas fa-chalkboard-teacher"></i>
-          <h3>Pelatihan Tim</h3>
-          <p>Workshop & pelatihan untuk meningkatkan kapasitas tim Anda.</p>
+        <div class="about-image">
+          <img src="https://images.unsplash.com/photo-1602143407151-7111542de6e8?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Perkebunan Kelapa Sawit">
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Testimoni -->
-  <section class="testimonials">
+  <!-- Contact Section -->
+  <section id="contact">
     <div class="container">
-      <h2>Apa Kata Klien Kami</h2>
-      <div class="testimonial">
-        <p>“Kemitraan dengan SolusiPro mengubah cara kami memasarkan produk. ROI naik 200% dalam 6 bulan!”</p>
-        <p><strong>— Rina Wijaya</strong>, CEO PT Maju Bersama</p>
-      </div>
-    </div>
-  </section>
+      <div class="contact-content">
+        <h2 class="section-title">Kontak Kami</h2>
+        <div class="contact-info">
+          <p>Hubungi kami untuk informasi lebih lanjut tentang kerja sama, investasi, atau program keberlanjutan.</p>
+          <p><strong>Email:</strong> info@agrosawit.id</p>
+          <p><strong>Telepon:</strong> +62 21 1234 5678</p>
+          <p><strong>Lokasi:</strong> Kalimantan Tengah, Indonesia</p>
+        </div>
 
-  <!-- Kontak -->
-  <section id="kontak" class="contact">
-    <div class="container">
-      <h2>Hubungi Kami</h2>
-      <form id="contactForm">
-        <input type="text" id="name" placeholder="Nama Lengkap" required />
-        <input type="email" id="email" placeholder="Email" required />
-        <textarea id="message" placeholder="Pesan Anda" rows="5" required></textarea>
-        <button type="submit" class="btn">Kirim Pesan</button>
-      </form>
+        <form class="contact-form">
+          <input type="text" placeholder="Nama Anda" required>
+          <input type="email" placeholder="Email Anda" required>
+          <textarea placeholder="Pesan Anda" required></textarea>
+          <button type="submit" class="btn">Kirim Pesan</button>
+        </form>
+      </div>
     </div>
   </section>
 
   <!-- Footer -->
   <footer>
     <div class="container">
-      <div class="footer-content">
-        <div class="footer-logo">Solusi<span>Pro</span></div>
-        <p>Jl. Bisnis Raya No. 123, Jakarta Selatan<br>
-        ?? (021) 1234-5678 | ?? info@solusipro.id</p>
-        <div class="social">
-          <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-          <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
-          <a href="https://wa.me/6281234567890" target="_blank" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
-        </div>
-      </div>
-      <p class="copyright">&copy; 2026 SolusiPro Consulting. Semua hak dilindungi.</p>
+      <p>&copy; 2026 AgroSawit. Semua hak dilindungi. Fokus pada penanaman kelapa sawit berkelanjutan.</p>
     </div>
   </footer>
 
-  <!-- JavaScript -->
   <script>
-    // Toggle menu mobile
-    const hamburger = document.getElementById('hamburger');
-    const navMenu = document.getElementById('navMenu');
+    // Toggle mobile menu
+    const menuToggle = document.getElementById('menuToggle');
+    const navLinks = document.getElementById('navLinks');
 
-    hamburger.addEventListener('click', () => {
-      navMenu.classList.toggle('show');
+    menuToggle.addEventListener('click', () => {
+      navLinks.classList.toggle('active');
     });
 
-    // Smooth scroll + tutup menu saat klik link
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-      anchor.addEventListener('click', function(e) {
-        e.preventDefault();
-        const targetId = this.getAttribute('href');
-        const targetElement = document.querySelector(targetId);
-        if (targetElement) {
-          window.scrollTo({
-            top: targetElement.offsetTop - 80,
-            behavior: 'smooth'
-          });
-          // Tutup menu mobile
-          navMenu.classList.remove('show');
-        }
+    // Tutup menu mobile saat klik link
+    document.querySelectorAll('.nav-links a').forEach(link => {
+      link.addEventListener('click', () => {
+        navLinks.classList.remove('active');
       });
     });
 
-    // Form submit handler
-    document.getElementById('contactForm').addEventListener('submit', function(e) {
-      e.preventDefault();
-      alert('? Terima kasih! Pesan Anda telah dikirim.\nKami akan segera menghubungi Anda.');
-      this.reset();
+    // Efek glow + scale saat klik menu
+    document.querySelectorAll('a[data-nav]').forEach(link => {
+      link.addEventListener('click', function(e) {
+        // Hapus efek dari semua link terlebih dahulu
+        document.querySelectorAll('a[data-nav]').forEach(el => {
+          el.classList.remove('active-glow');
+        });
+
+        // Tambahkan efek ke link yang diklik
+        this.classList.add('active-glow');
+
+        // Hapus efek setelah 400ms
+        setTimeout(() => {
+          this.classList.remove('active-glow');
+        }, 400);
+      });
     });
   </script>
 </body>
