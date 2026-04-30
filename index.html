@@ -3,377 +3,1068 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>AgroSawit - Perusahaan Penanaman Kelapa Sawit</title>
-  <meta name="description" content="Perusahaan berkelanjutan yang fokus pada penanaman kelapa sawit berkualitas tinggi di Indonesia.">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <title>Kalkulator Keuangan & Prediksi</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
   <style>
-    /* === Reset & Base === */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #ffffff;
+      --bg2: #f5f5f2;
+      --bg3: #eeede9;
+      --text: #1a1a18;
+      --text2: #6b6b67;
+      --text3: #9b9b97;
+      --border: rgba(0,0,0,0.12);
+      --border2: rgba(0,0,0,0.22);
+      --radius-md: 8px;
+      --radius-lg: 12px;
+      --radius-xl: 16px;
+      --green: #0F6E56;
+      --green-bg: #E1F5EE;
+      --blue: #185FA5;
+      --blue-bg: #E6F1FB;
+      --amber: #854F0B;
+      --amber-bg: #FAEEDA;
+      --red: #A32D2D;
+      --red-bg: #FCEBEB;
     }
 
-    html {
-      scroll-behavior: smooth;
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #1e1e1c;
+        --bg2: #272724;
+        --bg3: #2e2e2b;
+        --text: #f0efeb;
+        --text2: #a0a09c;
+        --text3: #6b6b67;
+        --border: rgba(255,255,255,0.12);
+        --border2: rgba(255,255,255,0.22);
+        --green: #5DCAA5;
+        --green-bg: #04342C;
+        --blue: #85B7EB;
+        --blue-bg: #042C53;
+        --amber: #EF9F27;
+        --amber-bg: #412402;
+        --red: #F09595;
+        --red-bg: #501313;
+      }
     }
 
     body {
-      font-family: 'Inter', sans-serif;
-      background-color: #ffffff;
-      color: #2d3748;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--bg3);
+      color: var(--text);
+      min-height: 100vh;
       line-height: 1.6;
     }
 
-    a {
-      text-decoration: none;
-      color: inherit;
+    .site-header {
+      background: var(--bg);
+      border-bottom: 0.5px solid var(--border);
+      padding: 1.25rem 2rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .logo {
+      width: 36px;
+      height: 36px;
+      background: var(--text);
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .logo svg { width: 20px; height: 20px; }
+
+    .site-header h1 {
+      font-size: 16px;
+      font-weight: 500;
+      color: var(--text);
+    }
+
+    .site-header p {
+      font-size: 13px;
+      color: var(--text2);
+      margin-left: auto;
     }
 
     .container {
-      width: 90%;
-      max-width: 1200px;
+      max-width: 960px;
       margin: 0 auto;
+      padding: 2rem 1.5rem;
     }
 
-    /* === Header & Navigation === */
-    header {
-      padding: 1.5rem 0;
-      position: fixed;
+    .tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .tab {
+      padding: 8px 18px;
+      border: 0.5px solid var(--border2);
+      border-radius: var(--radius-md);
+      font-size: 13px;
+      cursor: pointer;
+      background: var(--bg);
+      color: var(--text2);
+      transition: all 0.15s;
+      font-family: inherit;
+    }
+
+    .tab.active {
+      background: var(--text);
+      color: var(--bg);
+      border-color: var(--text);
+    }
+
+    .tab:hover:not(.active) {
+      background: var(--bg2);
+      color: var(--text);
+    }
+
+    .panel { display: none; }
+    .panel.active { display: block; }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    .card {
+      background: var(--bg);
+      border: 0.5px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+    }
+
+    .metric-card {
+      background: var(--bg2);
+      border-radius: var(--radius-md);
+      padding: 1rem;
+    }
+
+    .metric-label {
+      font-size: 12px;
+      color: var(--text2);
+      margin-bottom: 4px;
+    }
+
+    .metric-value {
+      font-size: 18px;
+      font-weight: 500;
+      color: var(--text);
+    }
+
+    .metric-value.green { color: var(--green); }
+    .metric-value.blue  { color: var(--blue); }
+    .metric-value.amber { color: var(--amber); }
+
+    .section-title {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text);
+      margin-bottom: 1rem;
+    }
+
+    .form-group { margin-bottom: 1rem; }
+
+    .form-label {
+      font-size: 13px;
+      color: var(--text2);
+      margin-bottom: 6px;
+      display: block;
+    }
+
+    .input-prefix {
+      display: flex;
+      align-items: center;
+      border: 0.5px solid var(--border2);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      background: var(--bg);
+    }
+
+    .prefix {
+      padding: 0 10px;
+      background: var(--bg2);
+      font-size: 13px;
+      color: var(--text2);
+      border-right: 0.5px solid var(--border);
+      height: 38px;
+      display: flex;
+      align-items: center;
+      white-space: nowrap;
+    }
+
+    .input-prefix input {
+      border: none;
+      flex: 1;
+      padding: 0 10px;
+      background: transparent;
+      color: var(--text);
+      font-size: 14px;
+      height: 38px;
+      outline: none;
+      font-family: inherit;
+      min-width: 0;
+    }
+
+    input[type="number"],
+    input[type="text"] {
+      background: var(--bg);
+      color: var(--text);
+      border: 0.5px solid var(--border2);
+      border-radius: var(--radius-md);
+      font-family: inherit;
+      font-size: 14px;
+      padding: 8px 12px;
       width: 100%;
-      top: 0;
-      z-index: 1000;
-      background: rgba(255, 255, 255, 0.95);
-      backdrop-filter: blur(4px);
-      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      outline: none;
     }
 
-    .navbar {
+    input[type="number"]:focus,
+    input[type="text"]:focus {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 2px rgba(24,95,165,0.15);
+    }
+
+    .slider-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 1rem;
+    }
+
+    .slider-row label {
+      font-size: 13px;
+      color: var(--text2);
+      min-width: 130px;
+    }
+
+    input[type="range"] {
+      flex: 1;
+      accent-color: var(--text);
+      cursor: pointer;
+    }
+
+    .slider-val {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text);
+      min-width: 60px;
+      text-align: right;
+    }
+
+    .type-toggle {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 1rem;
+    }
+
+    .type-toggle .tab { flex: 1; font-size: 12px; text-align: center; }
+
+    .result-box {
+      background: var(--bg2);
+      border-radius: var(--radius-md);
+      padding: 1rem 1.25rem;
+      margin-top: 0.75rem;
+    }
+
+    .result-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 7px 0;
+      border-bottom: 0.5px solid var(--border);
+      font-size: 13px;
+      color: var(--text);
+    }
+
+    .result-row:last-child {
+      border-bottom: none;
+      font-weight: 500;
+      font-size: 14px;
+    }
+
+    .chart-wrap {
+      position: relative;
+      width: 100%;
+      height: 220px;
+      margin-top: 1rem;
+    }
+
+    .chart-wrap-tall {
+      position: relative;
+      width: 100%;
+      height: 280px;
+      margin-top: 1rem;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 3px 9px;
+      border-radius: var(--radius-md);
+      font-size: 11px;
+      font-weight: 500;
+    }
+
+    .badge-green { background: var(--green-bg); color: var(--green); }
+    .badge-red   { background: var(--red-bg);   color: var(--red); }
+    .badge-blue  { background: var(--blue-bg);  color: var(--blue); }
+    .badge-amber { background: var(--amber-bg); color: var(--amber); }
+
+    .split {
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
 
-    .logo {
-      font-size: 1.5rem;
-      font-weight: 700;
-      color: #2f855a;
-    }
-
-    .nav-links {
-      display: flex;
-      gap: 2rem;
-      list-style: none;
-    }
-
-    .nav-links a {
-      font-weight: 600;
-      padding: 0.5rem 1rem;
-      border-radius: 6px;
-      transition: all 0.2s ease;
-      position: relative;
-    }
-
-    /* Efek glow & scale saat aktif */
-    .nav-links a.active-glow {
-      transform: scale(1.1);
-      box-shadow: 0 0 16px rgba(47, 133, 90, 0.6);
-      background-color: rgba(47, 133, 90, 0.08);
-      z-index: 2;
-    }
-
-    .menu-toggle {
-      display: none;
-      flex-direction: column;
-      cursor: pointer;
-    }
-
-    .menu-toggle span {
-      width: 25px;
-      height: 3px;
-      background: #2d3748;
-      margin: 3px 0;
-      transition: 0.3s;
-    }
-
-    /* === Hero Section === */
-    .hero {
-      padding: 12rem 0 6rem;
-      background: linear-gradient(rgba(255,255,255,0.9), rgba(255,255,255,0.9)), url('https://images.unsplash.com/photo-1602143407151-7111542de6e8?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') no-repeat center center/cover;
-      text-align: center;
-    }
-
-    .hero h1 {
-      font-size: 2.8rem;
-      font-weight: 700;
-      margin-bottom: 1rem;
-      color: #1a202c;
-    }
-
-    .hero p {
-      font-size: 1.2rem;
-      max-width: 700px;
-      margin: 0 auto 2rem;
-      color: #4a5568;
-    }
-
-    .btn {
-      display: inline-block;
-      padding: 0.8rem 2rem;
-      background-color: #2f855a;
-      color: white;
+    .progress-bar {
+      height: 8px;
       border-radius: 4px;
-      font-weight: 600;
-      transition: background 0.3s;
+      background: var(--bg3);
+      overflow: hidden;
+      margin-top: 8px;
     }
 
-    .btn:hover {
-      background-color: #276749;
+    .progress-fill {
+      height: 100%;
+      border-radius: 4px;
+      transition: width 0.4s ease;
     }
 
-    /* === About Section === */
-    .section {
-      padding: 5rem 0;
-    }
-
-    .section-title {
-      text-align: center;
-      font-size: 2.2rem;
-      margin-bottom: 3rem;
-      color: #1a202c;
-    }
-
-    .about-content {
+    .expense-row {
       display: flex;
-      gap: 3rem;
+      gap: 8px;
+      margin-bottom: 8px;
       align-items: center;
     }
 
-    .about-text h3 {
-      font-size: 1.8rem;
-      margin-bottom: 1.5rem;
-      color: #2f855a;
-    }
-
-    .about-text p {
-      margin-bottom: 1.5rem;
-      color: #4a5568;
-    }
-
-    .about-image {
-      flex: 1;
-      border-radius: 8px;
+    .expense-row .name-wrap {
+      flex: 2;
+      display: flex;
+      align-items: center;
+      border: 0.5px solid var(--border2);
+      border-radius: var(--radius-md);
+      background: var(--bg);
       overflow: hidden;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     }
 
-    .about-image img {
+    .expense-row .name-wrap input {
+      border: none;
+      background: transparent;
+      padding: 0 10px;
+      height: 36px;
+      flex: 1;
+      font-size: 13px;
+      outline: none;
+      color: var(--text);
+      font-family: inherit;
+    }
+
+    .expense-row .amt-wrap {
+      flex: 1.5;
+    }
+
+    .expense-row .del-btn {
+      padding: 6px 11px;
+      border: 0.5px solid var(--border2);
+      border-radius: var(--radius-md);
+      background: transparent;
+      cursor: pointer;
+      color: var(--text2);
+      font-size: 12px;
+      font-family: inherit;
+      transition: background 0.1s;
+    }
+
+    .expense-row .del-btn:hover { background: var(--red-bg); color: var(--red); }
+
+    .add-btn {
+      padding: 8px 12px;
+      border: 0.5px dashed var(--border2);
+      border-radius: var(--radius-md);
+      background: transparent;
+      cursor: pointer;
+      color: var(--text2);
+      font-size: 12px;
       width: 100%;
-      height: auto;
-      display: block;
-    }
-
-    /* === Contact Section === */
-    #contact {
-      background-color: #f8fafc;
-      padding: 5rem 0;
-    }
-
-    .contact-content {
-      max-width: 700px;
-      margin: 0 auto;
-      text-align: center;
-    }
-
-    .contact-content h3 {
-      font-size: 1.8rem;
-      margin-bottom: 1.5rem;
-      color: #2f855a;
-    }
-
-    .contact-info {
-      margin-bottom: 2rem;
-      color: #4a5568;
-    }
-
-    .contact-form input,
-    .contact-form textarea {
-      width: 100%;
-      padding: 0.8rem;
       margin-bottom: 1rem;
-      border: 1px solid #cbd5e0;
-      border-radius: 4px;
-      font-family: 'Inter', sans-serif;
+      font-family: inherit;
+      transition: background 0.1s;
     }
 
-    .contact-form textarea {
-      height: 120px;
-      resize: vertical;
+    .add-btn:hover { background: var(--bg2); color: var(--text); }
+
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 8px;
+      font-size: 12px;
+      color: var(--text2);
     }
 
-    /* === Footer === */
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .legend-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 2px;
+    }
+
+    .info-text {
+      font-size: 12px;
+      color: var(--text2);
+      line-height: 1.6;
+      margin-top: 8px;
+    }
+
     footer {
-      background-color: #edf2f7;
-      padding: 2rem 0;
       text-align: center;
-      color: #718096;
-      font-size: 0.95rem;
+      padding: 2rem;
+      font-size: 12px;
+      color: var(--text3);
+      border-top: 0.5px solid var(--border);
+      margin-top: 2rem;
+      background: var(--bg);
     }
 
-    /* === Responsive === */
-    @media (max-width: 768px) {
-      .menu-toggle {
-        display: flex;
-      }
-
-      .nav-links {
-        position: absolute;
-        top: 100%;
-        left: 0;
-        width: 100%;
-        background: white;
-        flex-direction: column;
-        padding: 1.5rem 0;
-        gap: 1.2rem;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        display: none;
-      }
-
-      .nav-links.active {
-        display: flex;
-      }
-
-      .nav-links a {
-        padding: 0.75rem 2rem;
-        text-align: center;
-      }
-
-      .hero h1 {
-        font-size: 2.2rem;
-      }
-
-      .hero p {
-        font-size: 1rem;
-      }
-
-      .about-content {
-        flex-direction: column;
-      }
+    @media (max-width: 640px) {
+      .grid-2, .grid-3 { grid-template-columns: 1fr; }
+      .slider-row label { min-width: 100px; }
+      .site-header p { display: none; }
+      .container { padding: 1rem; }
     }
   </style>
 </head>
 <body>
 
-  <!-- Header -->
-  <header>
-    <div class="container navbar">
-      <a href="#" class="logo">AgroSawit</a>
-      <nav>
-        <ul class="nav-links" id="navLinks">
-          <li><a href="#home" data-nav>Beranda</a></li>
-          <li><a href="#about" data-nav>Tentang Kami</a></li>
-          <li><a href="#contact" data-nav>Kontak</a></li>
-        </ul>
-        <div class="menu-toggle" id="menuToggle">
-          <span></span>
-          <span></span>
-          <span></span>
-        </div>
-      </nav>
-    </div>
-  </header>
+<header class="site-header">
+  <div class="logo">
+    <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="2" y="10" width="3" height="8" rx="1" fill="white"/>
+      <rect x="8" y="6" width="3" height="12" rx="1" fill="white"/>
+      <rect x="14" y="2" width="3" height="16" rx="1" fill="white"/>
+    </svg>
+  </div>
+  <h1>Kalkulator Keuangan & Prediksi</h1>
+  <p>Rencanakan masa depan finansial Anda</p>
+</header>
 
-  <!-- Hero Section -->
-  <section class="hero" id="home">
-    <div class="container">
-      <h1>Menanam Masa Depan dengan Kelapa Sawit</h1>
-      <p>Perusahaan berkelanjutan yang berkomitmen pada penanaman kelapa sawit berkualitas tinggi, ramah lingkungan, dan berkontribusi bagi pertumbuhan ekonomi lokal.</p>
-      <a href="#about" class="btn">Pelajari Lebih Lanjut</a>
-    </div>
-  </section>
+<div class="container">
 
-  <!-- About Section -->
-  <section class="section" id="about">
-    <div class="container">
-      <h2 class="section-title">Tentang Kami</h2>
-      <div class="about-content">
-        <div class="about-text">
-          <h3>Penanaman Sawit Berkelanjutan</h3>
-          <p>Sejak 2005, AgroSawit telah menjadi pelopor dalam praktik penanaman kelapa sawit yang berkelanjutan di Indonesia. Kami menggabungkan teknologi modern dengan kearifan lokal untuk memastikan hasil panen yang optimal tanpa merusak ekosistem.</p>
-          <p>Komitmen kami mencakup pengelolaan lahan yang bertanggung jawab, konservasi keanekaragaman hayati, serta pemberdayaan masyarakat sekitar perkebunan.</p>
-          <a href="#contact" class="btn">Hubungi Kami</a>
+  <div class="tabs">
+    <button class="tab active" onclick="showPanel('bunga', this)">Bunga &amp; Investasi</button>
+    <button class="tab" onclick="showPanel('cicilan', this)">Cicilan / KPR</button>
+    <button class="tab" onclick="showPanel('anggaran', this)">Anggaran &amp; Tabungan</button>
+    <button class="tab" onclick="showPanel('prediksi', this)">Prediksi Kekayaan</button>
+  </div>
+
+  <!-- ===== PANEL 1: BUNGA ===== -->
+  <div id="panel-bunga" class="panel active">
+    <div class="grid-2">
+      <div class="card">
+        <p class="section-title">Parameter Investasi</p>
+
+        <div class="form-group">
+          <label class="form-label">Modal awal (Rp)</label>
+          <div class="input-prefix">
+            <span class="prefix">Rp</span>
+            <input type="number" id="b-modal" value="10000000" oninput="calcBunga()">
+          </div>
         </div>
-        <div class="about-image">
-          <img src="https://images.unsplash.com/photo-1602143407151-7111542de6e8?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Perkebunan Kelapa Sawit">
+
+        <div class="slider-row">
+          <label>Bunga / tahun</label>
+          <input type="range" min="1" max="30" step="0.5" value="8" id="b-rate" oninput="calcBunga()">
+          <span class="slider-val" id="b-rate-val">8%</span>
+        </div>
+
+        <div class="slider-row">
+          <label>Lama investasi</label>
+          <input type="range" min="1" max="40" step="1" value="10" id="b-tahun" oninput="calcBunga()">
+          <span class="slider-val" id="b-tahun-val">10 thn</span>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Setoran rutin / bulan (Rp)</label>
+          <div class="input-prefix">
+            <span class="prefix">Rp</span>
+            <input type="number" id="b-rutin" value="500000" oninput="calcBunga()">
+          </div>
+        </div>
+
+        <div class="type-toggle">
+          <button class="tab active" id="btn-majemuk" onclick="setBunga('majemuk')">Bunga majemuk</button>
+          <button class="tab" id="btn-sederhana" onclick="setBunga('sederhana')">Bunga sederhana</button>
+        </div>
+
+        <div class="result-box" id="b-result"></div>
+      </div>
+
+      <div class="card">
+        <p class="section-title">Proyeksi pertumbuhan</p>
+        <div class="legend">
+          <span class="legend-item"><span class="legend-dot" style="background:#1D9E75"></span>Nilai investasi</span>
+          <span class="legend-item"><span class="legend-dot" style="background:#888780;opacity:.6"></span>Total disetor</span>
+        </div>
+        <div class="chart-wrap"><canvas id="chartBunga"></canvas></div>
+        <div class="grid-3" id="b-metrics" style="margin-top:1rem;"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== PANEL 2: CICILAN ===== -->
+  <div id="panel-cicilan" class="panel">
+    <div class="grid-2">
+      <div class="card">
+        <p class="section-title">Detail Pinjaman / KPR</p>
+
+        <div class="form-group">
+          <label class="form-label">Total pinjaman (Rp)</label>
+          <div class="input-prefix">
+            <span class="prefix">Rp</span>
+            <input type="number" id="c-pokok" value="500000000" oninput="calcCicilan()">
+          </div>
+        </div>
+
+        <div class="slider-row">
+          <label>Bunga / tahun</label>
+          <input type="range" min="1" max="25" step="0.5" value="10" id="c-rate" oninput="calcCicilan()">
+          <span class="slider-val" id="c-rate-val">10%</span>
+        </div>
+
+        <div class="slider-row">
+          <label>Tenor (tahun)</label>
+          <input type="range" min="1" max="30" step="1" value="15" id="c-tenor" oninput="calcCicilan()">
+          <span class="slider-val" id="c-tenor-val">15 thn</span>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Uang muka / DP (Rp)</label>
+          <div class="input-prefix">
+            <span class="prefix">Rp</span>
+            <input type="number" id="c-dp" value="100000000" oninput="calcCicilan()">
+          </div>
+        </div>
+
+        <div class="result-box" id="c-result"></div>
+      </div>
+
+      <div class="card">
+        <p class="section-title">Komposisi pembayaran per tahun</p>
+        <div class="legend">
+          <span class="legend-item"><span class="legend-dot" style="background:#1D9E75"></span>Pokok</span>
+          <span class="legend-item"><span class="legend-dot" style="background:#F0997B"></span>Bunga</span>
+        </div>
+        <div class="chart-wrap"><canvas id="chartCicilan"></canvas></div>
+        <div class="grid-3" id="c-metrics" style="margin-top:1rem;"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== PANEL 3: ANGGARAN ===== -->
+  <div id="panel-anggaran" class="panel">
+    <div class="grid-2">
+      <div class="card">
+        <p class="section-title">Pemasukan & Pengeluaran</p>
+
+        <div class="form-group">
+          <label class="form-label">Total pemasukan / bulan (Rp)</label>
+          <div class="input-prefix">
+            <span class="prefix">Rp</span>
+            <input type="number" id="a-income" value="8000000" oninput="calcAnggaran()">
+          </div>
+        </div>
+
+        <p class="form-label" style="margin-bottom:8px;">Daftar pengeluaran rutin</p>
+        <div id="expense-list"></div>
+        <button class="add-btn" onclick="addExpense()">+ Tambah pengeluaran</button>
+
+        <div class="result-box" id="a-result"></div>
+      </div>
+
+      <div class="card">
+        <p class="section-title">Distribusi anggaran</p>
+        <div class="chart-wrap"><canvas id="chartAnggaran"></canvas></div>
+        <div id="a-saving-info" style="margin-top:1rem;"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== PANEL 4: PREDIKSI ===== -->
+  <div id="panel-prediksi" class="panel">
+    <div class="card" style="margin-bottom:1rem;">
+      <p class="section-title">Simulasi Prediksi Kekayaan Bersih (Net Worth)</p>
+      <div class="grid-2">
+        <div>
+          <div class="form-group">
+            <label class="form-label">Aset saat ini (Rp)</label>
+            <div class="input-prefix">
+              <span class="prefix">Rp</span>
+              <input type="number" id="p-aset" value="50000000" oninput="calcPrediksi()">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Utang saat ini (Rp)</label>
+            <div class="input-prefix">
+              <span class="prefix">Rp</span>
+              <input type="number" id="p-utang" value="20000000" oninput="calcPrediksi()">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Tabungan / bulan (Rp)</label>
+            <div class="input-prefix">
+              <span class="prefix">Rp</span>
+              <input type="number" id="p-tabungan" value="2000000" oninput="calcPrediksi()">
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="slider-row">
+            <label>Return investasi / thn</label>
+            <input type="range" min="0" max="25" step="0.5" value="8" id="p-return" oninput="calcPrediksi()">
+            <span class="slider-val" id="p-return-val">8%</span>
+          </div>
+          <div class="slider-row">
+            <label>Inflasi / tahun</label>
+            <input type="range" min="1" max="15" step="0.5" value="5" id="p-inflasi" oninput="calcPrediksi()">
+            <span class="slider-val" id="p-inflasi-val">5%</span>
+          </div>
+          <div class="slider-row">
+            <label>Proyeksi (tahun)</label>
+            <input type="range" min="5" max="40" step="5" value="20" id="p-tahun" oninput="calcPrediksi()">
+            <span class="slider-val" id="p-tahun-val">20 thn</span>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Kenaikan penghasilan / tahun (%)</label>
+            <input type="number" id="p-naik" value="5" oninput="calcPrediksi()">
+          </div>
         </div>
       </div>
     </div>
-  </section>
 
-  <!-- Contact Section -->
-  <section id="contact">
-    <div class="container">
-      <div class="contact-content">
-        <h2 class="section-title">Kontak Kami</h2>
-        <div class="contact-info">
-          <p>Hubungi kami untuk informasi lebih lanjut tentang kerja sama, investasi, atau program keberlanjutan.</p>
-          <p><strong>Email:</strong> info@agrosawit.id</p>
-          <p><strong>Telepon:</strong> +62 21 1234 5678</p>
-          <p><strong>Lokasi:</strong> Kalimantan Tengah, Indonesia</p>
+    <div class="grid-2">
+      <div class="card">
+        <p class="section-title">Proyeksi kekayaan bersih</p>
+        <div class="legend">
+          <span class="legend-item"><span class="legend-dot" style="background:#185FA5"></span>Nominal</span>
+          <span class="legend-item"><span class="legend-dot" style="background:#1D9E75;opacity:.7"></span>Nilai riil (sudah dikurang inflasi)</span>
         </div>
-
-        <form class="contact-form">
-          <input type="text" placeholder="Nama Anda" required>
-          <input type="email" placeholder="Email Anda" required>
-          <textarea placeholder="Pesan Anda" required></textarea>
-          <button type="submit" class="btn">Kirim Pesan</button>
-        </form>
+        <div class="chart-wrap-tall"><canvas id="chartPrediksi"></canvas></div>
+      </div>
+      <div class="card">
+        <p class="section-title">Ringkasan prediksi</p>
+        <div id="p-summary"></div>
       </div>
     </div>
-  </section>
+  </div>
 
-  <!-- Footer -->
-  <footer>
-    <div class="container">
-      <p>&copy; 2026 AgroSawit. Semua hak dilindungi. Fokus pada penanaman kelapa sawit berkelanjutan.</p>
-    </div>
-  </footer>
+</div><!-- /container -->
 
-  <script>
-    // Toggle mobile menu
-    const menuToggle = document.getElementById('menuToggle');
-    const navLinks = document.getElementById('navLinks');
+<footer>
+  Kalkulator Keuangan &amp; Prediksi &mdash; Dibuat untuk membantu perencanaan finansial Anda.<br>
+  Hasil kalkulasi bersifat estimasi. Konsultasikan dengan perencana keuangan untuk keputusan investasi.
+</footer>
 
-    menuToggle.addEventListener('click', () => {
-      navLinks.classList.toggle('active');
+<script>
+  // ============================================================
+  // UTILITIES
+  // ============================================================
+  let bungaType = 'majemuk';
+  let charts = {};
+  let expenses = [
+    { name: 'Makan & minum',  amount: 2000000 },
+    { name: 'Transport',       amount: 800000  },
+    { name: 'Listrik & air',   amount: 500000  },
+    { name: 'Hiburan',         amount: 600000  }
+  ];
+
+  function fmt(n) {
+    return 'Rp\u00a0' + Math.round(n).toLocaleString('id-ID');
+  }
+
+  function fmtShort(n) {
+    if (n >= 1e12) return (n / 1e12).toFixed(2) + '\u00a0T';
+    if (n >= 1e9)  return (n / 1e9).toFixed(2)  + '\u00a0M';
+    if (n >= 1e6)  return (n / 1e6).toFixed(1)  + '\u00a0jt';
+    if (n >= 1e3)  return (n / 1e3).toFixed(0)  + '\u00a0rb';
+    return String(Math.round(n));
+  }
+
+  function destroyChart(id) {
+    if (charts[id]) { charts[id].destroy(); delete charts[id]; }
+  }
+
+  // ============================================================
+  // PANEL SWITCHING
+  // ============================================================
+  function showPanel(id, btn) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tabs > .tab').forEach(t => t.classList.remove('active'));
+    document.getElementById('panel-' + id).classList.add('active');
+    btn.classList.add('active');
+    setTimeout(() => {
+      if (id === 'bunga')    calcBunga();
+      if (id === 'cicilan')  calcCicilan();
+      if (id === 'anggaran') { renderExpenses(); calcAnggaran(); }
+      if (id === 'prediksi') calcPrediksi();
+    }, 30);
+  }
+
+  // ============================================================
+  // PANEL 1 – BUNGA & INVESTASI
+  // ============================================================
+  function setBunga(type) {
+    bungaType = type;
+    document.getElementById('btn-majemuk').classList.toggle('active', type === 'majemuk');
+    document.getElementById('btn-sederhana').classList.toggle('active', type === 'sederhana');
+    calcBunga();
+  }
+
+  function calcBunga() {
+    const modal  = parseFloat(document.getElementById('b-modal').value)  || 0;
+    const rate   = parseFloat(document.getElementById('b-rate').value)   || 0;
+    const tahun  = parseInt(document.getElementById('b-tahun').value)    || 1;
+    const rutin  = parseFloat(document.getElementById('b-rutin').value)  || 0;
+
+    document.getElementById('b-rate-val').textContent  = rate  + '%';
+    document.getElementById('b-tahun-val').textContent = tahun + ' thn';
+
+    const r  = rate / 100;
+    const rm = r / 12;
+    const n  = tahun * 12;
+
+    let akhir;
+    if (bungaType === 'majemuk') {
+      const fromModal = modal * Math.pow(1 + rm, n);
+      const fromRutin = rutin * ((Math.pow(1 + rm, n) - 1) / rm);
+      akhir = fromModal + fromRutin;
+    } else {
+      akhir = modal * (1 + r * tahun) + rutin * n;
+    }
+
+    const totalSetor = modal + rutin * n;
+    const keuntungan = akhir - totalSetor;
+    const roi = totalSetor > 0 ? ((keuntungan / totalSetor) * 100).toFixed(1) : 0;
+
+    document.getElementById('b-result').innerHTML = `
+      <div class="result-row"><span>Modal awal</span><span>${fmt(modal)}</span></div>
+      <div class="result-row"><span>Total setoran rutin</span><span>${fmt(rutin * n)}</span></div>
+      <div class="result-row"><span>Total disetor</span><span>${fmt(totalSetor)}</span></div>
+      <div class="result-row"><span style="color:var(--green)">Keuntungan bunga</span><span style="color:var(--green)">${fmt(keuntungan)}</span></div>
+      <div class="result-row"><span><b>Nilai akhir</b></span><span><b>${fmt(akhir)}</b></span></div>
+    `;
+
+    // Build chart data
+    const labels = [], dataTotal = [], dataSetor = [];
+    for (let y = 0; y <= tahun; y++) {
+      labels.push('Thn ' + y);
+      const m = y * 12;
+      let v;
+      if (bungaType === 'majemuk') {
+        v = modal * Math.pow(1 + rm, m) + (m > 0 ? rutin * ((Math.pow(1 + rm, m) - 1) / rm) : 0);
+      } else {
+        v = modal * (1 + r * y) + rutin * m;
+      }
+      dataTotal.push(Math.round(v));
+      dataSetor.push(Math.round(modal + rutin * m));
+    }
+
+    destroyChart('bunga');
+    charts['bunga'] = new Chart(document.getElementById('chartBunga'), {
+      type: 'line',
+      data: {
+        labels,
+        datasets: [
+          { label: 'Nilai investasi', data: dataTotal, borderColor: '#1D9E75', backgroundColor: 'rgba(29,158,117,0.08)', fill: true, tension: 0.3, pointRadius: 2 },
+          { label: 'Total disetor',   data: dataSetor, borderColor: '#888780', borderDash: [4, 4], backgroundColor: 'transparent', tension: 0.3, pointRadius: 0 }
+        ]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+          y: { ticks: { callback: v => fmtShort(v) } },
+          x: { ticks: { maxTicksLimit: 8 } }
+        }
+      }
     });
 
-    // Tutup menu mobile saat klik link
-    document.querySelectorAll('.nav-links a').forEach(link => {
-      link.addEventListener('click', () => {
-        navLinks.classList.remove('active');
+    document.getElementById('b-metrics').innerHTML = `
+      <div class="metric-card"><div class="metric-label">Nilai akhir</div><div class="metric-value blue">${fmtShort(akhir)}</div></div>
+      <div class="metric-card"><div class="metric-label">Keuntungan</div><div class="metric-value green">${fmtShort(keuntungan)}</div></div>
+      <div class="metric-card"><div class="metric-label">ROI total</div><div class="metric-value amber">${roi}%</div></div>
+    `;
+  }
+
+  // ============================================================
+  // PANEL 2 – CICILAN / KPR
+  // ============================================================
+  function calcCicilan() {
+    const pokok = parseFloat(document.getElementById('c-pokok').value) || 0;
+    const rate  = parseFloat(document.getElementById('c-rate').value)  || 0;
+    const tenor = parseInt(document.getElementById('c-tenor').value)   || 1;
+    const dp    = parseFloat(document.getElementById('c-dp').value)    || 0;
+
+    document.getElementById('c-rate-val').textContent  = rate  + '%';
+    document.getElementById('c-tenor-val').textContent = tenor + ' thn';
+
+    const pinjaman = Math.max(0, pokok - dp);
+    const rm = rate / 100 / 12;
+    const n  = tenor * 12;
+    const cicilan     = pinjaman * rm * Math.pow(1 + rm, n) / (Math.pow(1 + rm, n) - 1);
+    const totalBayar  = cicilan * n;
+    const totalBunga  = totalBayar - pinjaman;
+    const pctBunga    = totalBayar > 0 ? ((totalBunga / totalBayar) * 100).toFixed(1) : 0;
+
+    document.getElementById('c-result').innerHTML = `
+      <div class="result-row"><span>Uang muka (DP)</span><span>${fmt(dp)}</span></div>
+      <div class="result-row"><span>Pinjaman bersih</span><span>${fmt(pinjaman)}</span></div>
+      <div class="result-row"><span><b>Cicilan / bulan</b></span><span><b>${fmt(cicilan)}</b></span></div>
+      <div class="result-row"><span>Total bunga</span><span style="color:var(--red)">${fmt(totalBunga)}</span></div>
+      <div class="result-row"><span><b>Total pembayaran</b></span><span><b>${fmt(totalBayar)}</b></span></div>
+    `;
+
+    const labels = [], dataPokok = [], dataBunga = [];
+    let sisaPokok = pinjaman;
+    for (let y = 1; y <= tenor; y++) {
+      let bungaThn = 0, pokokThn = 0;
+      for (let m = 0; m < 12; m++) {
+        const bi = sisaPokok * rm;
+        const pi = cicilan - bi;
+        bungaThn  += bi;
+        pokokThn  += pi;
+        sisaPokok -= pi;
+      }
+      labels.push('Thn ' + y);
+      dataBunga.push(Math.round(bungaThn));
+      dataPokok.push(Math.round(pokokThn));
+    }
+
+    destroyChart('cicilan');
+    charts['cicilan'] = new Chart(document.getElementById('chartCicilan'), {
+      type: 'bar',
+      data: {
+        labels,
+        datasets: [
+          { label: 'Pokok', data: dataPokok, backgroundColor: '#1D9E75' },
+          { label: 'Bunga', data: dataBunga, backgroundColor: '#F0997B' }
+        ]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+          x: { stacked: true, ticks: { maxTicksLimit: 10 } },
+          y: { stacked: true, ticks: { callback: v => fmtShort(v) } }
+        }
+      }
+    });
+
+    document.getElementById('c-metrics').innerHTML = `
+      <div class="metric-card"><div class="metric-label">Cicilan/bln</div><div class="metric-value blue">${fmtShort(cicilan)}</div></div>
+      <div class="metric-card"><div class="metric-label">Total bunga</div><div class="metric-value" style="color:var(--red)">${fmtShort(totalBunga)}</div></div>
+      <div class="metric-card"><div class="metric-label">% bunga</div><div class="metric-value amber">${pctBunga}%</div></div>
+    `;
+  }
+
+  // ============================================================
+  // PANEL 3 – ANGGARAN & TABUNGAN
+  // ============================================================
+  function renderExpenses() {
+    const el = document.getElementById('expense-list');
+    el.innerHTML = expenses.map((e, i) => `
+      <div class="expense-row">
+        <div class="name-wrap">
+          <input type="text" value="${e.name}" oninput="expenses[${i}].name=this.value;calcAnggaran()">
+        </div>
+        <div class="amt-wrap">
+          <div class="input-prefix">
+            <span class="prefix">Rp</span>
+            <input type="number" value="${e.amount}" oninput="expenses[${i}].amount=parseFloat(this.value)||0;calcAnggaran()">
+          </div>
+        </div>
+        <button class="del-btn" onclick="expenses.splice(${i},1);renderExpenses();calcAnggaran()">✕</button>
+      </div>
+    `).join('');
+  }
+
+  function addExpense() {
+    expenses.push({ name: 'Pengeluaran baru', amount: 0 });
+    renderExpenses();
+    calcAnggaran();
+  }
+
+  function calcAnggaran() {
+    const income   = parseFloat(document.getElementById('a-income').value) || 0;
+    const totalExp = expenses.reduce((s, e) => s + e.amount, 0);
+    const sisa     = income - totalExp;
+    const pctSave  = income > 0 ? ((sisa / income) * 100).toFixed(1) : 0;
+
+    document.getElementById('a-result').innerHTML = `
+      <div class="result-row"><span>Total pemasukan</span><span>${fmt(income)}</span></div>
+      <div class="result-row"><span>Total pengeluaran</span><span style="color:var(--red)">${fmt(totalExp)}</span></div>
+      <div class="result-row"><span><b>${sisa >= 0 ? 'Sisa / bisa ditabung' : 'Defisit'}</b></span>
+        <span style="color:${sisa >= 0 ? 'var(--green)' : 'var(--red)'}"><b>${fmt(Math.abs(sisa))}</b></span>
+      </div>
+    `;
+
+    const pctFill = income > 0 ? Math.min(100, (totalExp / income) * 100) : 100;
+    const barColor = pctFill > 90 ? '#E24B4A' : pctFill > 70 ? '#BA7517' : '#1D9E75';
+    document.getElementById('a-saving-info').innerHTML = `
+      <div>
+        <div class="split">
+          <span style="font-size:13px;color:var(--text2)">Penggunaan anggaran</span>
+          <span style="font-size:13px;font-weight:500">${Math.round(pctFill)}%</span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill" style="width:${pctFill}%;background:${barColor}"></div>
+        </div>
+      </div>
+      <div class="metric-card" style="margin-top:12px;">
+        <div class="metric-label">Rasio tabungan</div>
+        <div class="metric-value ${sisa >= 0 ? 'green' : ''}" style="${sisa < 0 ? 'color:var(--red)' : ''}">
+          ${pctSave}%&nbsp;${sisa >= 0
+            ? '<span class="badge badge-green">Sehat</span>'
+            : '<span class="badge badge-red">Defisit</span>'}
+        </div>
+      </div>
+      <p class="info-text" style="margin-top:8px;">
+        Target ideal: simpan minimal <b>20%</b> dari penghasilan setiap bulan.<br>
+        ${sisa >= 0 && sisa * 12 > 0
+          ? 'Jika ditabung setahun: <b>' + fmt(sisa * 12) + '</b>'
+          : ''}
+      </p>
+    `;
+
+    const colors  = ['#1D9E75','#3266ad','#F0997B','#BA7517','#7F77DD','#E24B4A','#5DCAA5','#EF9F27','#D4537E'];
+    const expData = expenses.filter(e => e.amount > 0);
+    destroyChart('anggaran');
+    if (expData.length > 0) {
+      charts['anggaran'] = new Chart(document.getElementById('chartAnggaran'), {
+        type: 'doughnut',
+        data: {
+          labels: expData.map(e => e.name),
+          datasets: [{
+            data: expData.map(e => e.amount),
+            backgroundColor: colors.slice(0, expData.length),
+            borderWidth: 0
+          }]
+        },
+        options: {
+          responsive: true, maintainAspectRatio: false, cutout: '60%',
+          plugins: { legend: { position: 'bottom', labels: { font: { size: 11 }, boxWidth: 10, padding: 12 } } }
+        }
       });
+    }
+  }
+
+  // ============================================================
+  // PANEL 4 – PREDIKSI KEKAYAAN
+  // ============================================================
+  function calcPrediksi() {
+    const aset     = parseFloat(document.getElementById('p-aset').value)     || 0;
+    const utang    = parseFloat(document.getElementById('p-utang').value)     || 0;
+    const tabungan = parseFloat(document.getElementById('p-tabungan').value)  || 0;
+    const ret      = parseFloat(document.getElementById('p-return').value)    || 0;
+    const inflasi  = parseFloat(document.getElementById('p-inflasi').value)   || 0;
+    const tahun    = parseInt(document.getElementById('p-tahun').value)       || 10;
+    const naik     = parseFloat(document.getElementById('p-naik').value)      || 0;
+
+    document.getElementById('p-return-val').textContent  = ret    + '%';
+    document.getElementById('p-inflasi-val').textContent = inflasi + '%';
+    document.getElementById('p-tahun-val').textContent   = tahun   + ' thn';
+
+    const labels = [], dataNominal = [], dataRiil = [];
+    let kekayaan   = aset - utang;
+    let tabBulanan = tabungan;
+    const rm = ret / 100 / 12;
+
+    for (let y = 0; y <= tahun; y++) {
+      labels.push('Thn ' + y);
+      dataNominal.push(Math.round(kekayaan));
+      dataRiil.push(Math.round(kekayaan / Math.pow(1 + inflasi / 100, y)));
+
+      for (let m = 0; m < 12; m++) {
+        kekayaan = kekayaan * (1 + rm) + tabBulanan;
+      }
+      tabBulanan *= (1 + naik / 100);
+    }
+
+    const akhirNominal = dataNominal[dataNominal.length - 1];
+    const akhirRiil    = dataRiil[dataRiil.length - 1];
+    const awal         = dataNominal[0];
+    const growth       = awal > 0 ? ((akhirNominal - awal) / Math.abs(awal) * 100).toFixed(0) : 0;
+
+    destroyChart('prediksi');
+    charts['prediksi'] = new Chart(document.getElementById('chartPrediksi'), {
+      type: 'line',
+      data: {
+        labels,
+        datasets: [
+          { label: 'Nominal',        data: dataNominal, borderColor: '#185FA5', backgroundColor: 'rgba(24,95,165,0.07)', fill: true, tension: 0.3, pointRadius: 2 },
+          { label: 'Nilai riil',     data: dataRiil,    borderColor: '#1D9E75', borderDash: [5, 3], backgroundColor: 'transparent', tension: 0.3, pointRadius: 0 }
+        ]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+          y: { ticks: { callback: v => fmtShort(v) } },
+          x: { ticks: { maxTicksLimit: 9 } }
+        }
+      }
     });
 
-    // Efek glow + scale saat klik menu
-    document.querySelectorAll('a[data-nav]').forEach(link => {
-      link.addEventListener('click', function(e) {
-        // Hapus efek dari semua link terlebih dahulu
-        document.querySelectorAll('a[data-nav]').forEach(el => {
-          el.classList.remove('active-glow');
-        });
+    const riilOk = akhirRiil > awal;
+    document.getElementById('p-summary').innerHTML = `
+      <div class="result-box">
+        <div class="result-row"><span>Kekayaan bersih awal</span><span>${fmt(awal)}</span></div>
+        <div class="result-row"><span>Nominal thn ke-${tahun}</span><span style="color:var(--blue)"><b>${fmt(akhirNominal)}</b></span></div>
+        <div class="result-row"><span>Nilai riil (setelah inflasi)</span><span style="color:var(--green)">${fmt(akhirRiil)}</span></div>
+        <div class="result-row"><span>Pertumbuhan total</span><span><span class="badge badge-blue">+${growth}%</span></span></div>
+      </div>
+      <div class="grid-2" style="margin-top:12px;gap:8px;">
+        <div class="metric-card"><div class="metric-label">Nominal akhir</div><div class="metric-value blue">${fmtShort(akhirNominal)}</div></div>
+        <div class="metric-card"><div class="metric-label">Riil akhir</div><div class="metric-value green">${fmtShort(akhirRiil)}</div></div>
+      </div>
+      <p class="info-text" style="margin-top:12px;">
+        Dengan return <b>${ret}%/thn</b> dan inflasi <b>${inflasi}%/thn</b>, kekayaan riil Anda
+        ${riilOk ? '<b style="color:var(--green)">tumbuh</b> melampaui inflasi.' : '<b style="color:var(--red)">tergerus</b> oleh inflasi.'}
+        ${!riilOk ? 'Pertimbangkan meningkatkan imbal hasil investasi.' : 'Strategi investasi Anda sudah solid.'}
+      </p>
+    `;
+  }
 
-        // Tambahkan efek ke link yang diklik
-        this.classList.add('active-glow');
+  // ============================================================
+  // INIT
+  // ============================================================
+  renderExpenses();
+  calcBunga();
+  calcAnggaran();
+</script>
 
-        // Hapus efek setelah 400ms
-        setTimeout(() => {
-          this.classList.remove('active-glow');
-        }, 400);
-      });
-    });
-  </script>
 </body>
 </html>
