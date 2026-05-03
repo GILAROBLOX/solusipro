@@ -480,8 +480,7 @@
     <button class="tab" onclick="showPanel('anggaran', this)">Anggaran &amp; Tabungan</button>
     <button class="tab" onclick="showPanel('prediksi', this)">Prediksi Kekayaan</button>
   </div>
-
-  <!-- ===== PANEL 1: BUNGA ===== -->
+  
   <div id="panel-bunga" class="panel active">
     <div class="grid-2">
       <div class="card">
@@ -534,8 +533,7 @@
       </div>
     </div>
   </div>
-
-  <!-- ===== PANEL 2: CICILAN ===== -->
+  
   <div id="panel-cicilan" class="panel">
     <div class="grid-2">
       <div class="card">
@@ -584,7 +582,6 @@
     </div>
   </div>
 
-  <!-- ===== PANEL 3: ANGGARAN ===== -->
   <div id="panel-anggaran" class="panel">
     <div class="grid-2">
       <div class="card">
@@ -613,7 +610,6 @@
     </div>
   </div>
 
-  <!-- ===== PANEL 4: PREDIKSI ===== -->
   <div id="panel-prediksi" class="panel">
     <div class="card" style="margin-bottom:1rem;">
       <p class="section-title">Simulasi Prediksi Kekayaan Bersih (Net Worth)</p>
@@ -681,7 +677,7 @@
     </div>
   </div>
 
-</div><!-- /container -->
+</div>
 
 <footer>
   Kalkulator Keuangan &amp; Prediksi &mdash; Dibuat untuk membantu perencanaan finansial Anda.<br>
@@ -689,9 +685,6 @@
 </footer>
 
 <script>
-  // ============================================================
-  // UTILITIES
-  // ============================================================
   let bungaType = 'majemuk';
   let charts = {};
   let expenses = [
@@ -717,9 +710,6 @@
     if (charts[id]) { charts[id].destroy(); delete charts[id]; }
   }
 
-  // ============================================================
-  // PANEL SWITCHING
-  // ============================================================
   function showPanel(id, btn) {
     document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
     document.querySelectorAll('.tabs > .tab').forEach(t => t.classList.remove('active'));
@@ -733,9 +723,6 @@
     }, 30);
   }
 
-  // ============================================================
-  // PANEL 1 – BUNGA & INVESTASI
-  // ============================================================
   function setBunga(type) {
     bungaType = type;
     document.getElementById('btn-majemuk').classList.toggle('active', type === 'majemuk');
@@ -819,9 +806,6 @@
     `;
   }
 
-  // ============================================================
-  // PANEL 2 – CICILAN / KPR
-  // ============================================================
   function calcCicilan() {
     const pokok = parseFloat(document.getElementById('c-pokok').value) || 0;
     const rate  = parseFloat(document.getElementById('c-rate').value)  || 0;
